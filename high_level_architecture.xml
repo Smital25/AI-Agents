@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="High-Level Architecture" id="hl-arch">
+    <mxGraphModel dx="1106" dy="702" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <!-- User Client -->
+        <mxCell id="user" value="User Client
+(Browser / Streamlit UI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="20" y="40" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Streamlit Server -->
+        <mxCell id="server" value="Streamlit Server
+(Backend / API)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f8f8;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="260" y="30" width="220" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- MongoDB -->
+        <mxCell id="db" value="MongoDB
+(Users, Projects, Tasks, Docs)" style="shape=cylinder;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="540" y="40" width="160" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- LLMs -->
+        <mxCell id="llm" value="AI Models / LLMs
+(Ollama, OpenAI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7e6;strokeColor=#a86b00;" vertex="1" parent="1">
+          <mxGeometry x="260" y="170" width="220" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- SMTP -->
+        <mxCell id="smtp" value="Notification / SMTP
+(Email Alerts & Invites)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f7ff;strokeColor=#0077a6;" vertex="1" parent="1">
+          <mxGeometry x="540" y="170" width="160" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;" edge="1" source="user" target="server" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;" edge="1" source="server" target="db" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;dashed=1;" edge="1" source="server" target="llm" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;dashed=1;" edge="1" source="server" target="smtp" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Small notes -->
+        <mxCell id="note1" value="HTTP / REST or RPC" style="text;html=1;strokeColor=none;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="140" y="10" width="160" height="20" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
