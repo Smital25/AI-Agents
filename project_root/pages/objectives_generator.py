@@ -235,26 +235,37 @@ def ai_generate_objectives(littext: str, domain: str, project: str) -> List[str]
         return fallback_objectives("")
 
     prompt = f"""
-You are an expert academic research mentor helping students plan an academic project.
+You are an expert academic research mentor.
 
 Project: {project}
 Domain: {domain}
 
-Use ONLY the following literature text (titles, abstracts, summaries):
+You are given TOP-RANKED research papers from the project's literature review.
+Each paper is labeled [PAPER i].
 
-{littext[:5000]}
+GUIDELINES:
+- Base each objective on the provided papers.
+- Objectives should reflect methods, models, evaluation strategies, or gaps
+  mentioned in the papers.
+- You MAY combine insights from multiple papers.
+- If unsure, write conservative, literature-aligned objectives.
+- Avoid generic textbook objectives.
+
+INPUT PAPERS:
+{littext}
 
 TASK:
-- Generate EXACTLY 12 academic project OBJECTIVES.
-- Number them 1..12.
-- Each objective 1–2 sentences.
-- Use strong academic verbs (analyze, design, evaluate, validate, compare, etc.).
-- Make them specific to the domain and literature, not generic.
-
-If the literature is truly insufficient, you may respond with only the token:
-INSUFFICIENT_LITERATURE
+- Generate EXACTLY 12 academic project objectives.
+- Number them clearly from 1 to 12.
+- Each objective must be 1–2 sentences.
+- Prefer referencing papers where relevant, but do NOT fail if reference is unclear.
+- Output ONLY the numbered list. No explanations.
 """
+
+
     raw = call_ollama(prompt).strip()
+
+    
 
     # If Ollama died or empty -> fallback
     if not raw:
@@ -457,12 +468,35 @@ def objectives_page(user: Dict[str, Any], active_project: Dict[str, Any]):
         st.markdown("---")
 
     # --- flatten literature into text for DeepSeek ---
+    raw_results = lit.get("results") if isinstance(lit, dict) else []
+    papers_list = raw_results if isinstance(raw_results, list) else []
+
+    papers = sorted(
+        papers_list,
+        key=lambda x: float(x.get("score", 0.0)) if isinstance(x, dict) else 0.0,
+        reverse=True,
+    )
+
+    TOP_PAPERS_FOR_OBJECTIVES = 4
+    selected_papers = papers[:TOP_PAPERS_FOR_OBJECTIVES]
+
     text = ""
-    for p in safe_get(lit, "results", []) or []:
+    for i, p in enumerate(selected_papers, 1):
         title = safe_get(p, "title", "")
         summary = safe_get(p, "summary", "")
         abstract = safe_get(p, "abstract", "")
-        text += f"Title: {title}\nSummary: {summary}\nAbstract: {abstract}\n\n"
+        source = safe_get(p, "source", "")
+        year = safe_get(p, "year", "")
+
+        text += (
+            f"[PAPER {i}]\n"
+            f"Title: {title}\n"
+            f"Year: {year}\n"
+            f"Source: {source}\n"
+            f"Summary: {summary}\n"
+            f"Abstract: {abstract}\n\n"
+        )
+
 
     st.success(f"Literature review loaded from project **{pname}**.")
 
